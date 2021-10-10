@@ -1,17 +1,9 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
+	"github.com/rahul-kr/mta-hosting-optimizer/app"
 )
 
 func main() {
-	r := gin.New()
-
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World")
-	})
-
-	r.Run()
+	app.StartApplication()
 }
