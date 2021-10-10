@@ -21,10 +21,10 @@ func StartApplication() {
 }
 
 type HostsMap struct {
-	Id       int64  `json:"id" gorm:"primary_key"`
-	Ip       string `json:"ip" gorm:"type:varchar(255);not null"`
-	HostName string `json:"hostname" gorm:"type:varchar(255);not null"`
-	Active   bool   `json:"active" gorm:"type:bool;not null default:false"`
+	Id       int64  `json:"id,omitempty" gorm:"primary_key"`
+	Ip       string `json:"ip,omitempty" gorm:"type:varchar(255);not null"`
+	HostName string `json:"hostname,omitempty" gorm:"type:varchar(255);not null"`
+	Active   bool   `json:"active,omitempty" gorm:"type:bool;not null default:false"`
 }
 
 var db *gorm.DB
@@ -57,7 +57,7 @@ func getThreshold(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
 	inputMapCount := params["X"]
-	var hostmap HostsMap
-	db.Preload("Items").First(&hostmap, inputMapCount)
+	var hostmap []HostsMap
+	db.Raw("SELECT host_name, COUNT(active) AS active_status FROM hosts_maps WHERE active=true GROUP BY host_name HAVING count(active_status)= ?;", inputMapCount).Scan(&hostmap)
 	json.NewEncoder(w).Encode(hostmap)
 }

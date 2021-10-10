@@ -3,9 +3,7 @@ module github.com/rahul-kr/mta-hosting-optimizer
 go 1.16
 
 require (
-	github.com/gin-gonic/gin v1.7.4 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
-	github.com/jinzhu/gorm v1.9.16 // indirect
-	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
-	gopkg.in/go-playground/validator.v9 v9.29.1 // indirect
+	github.com/gorilla/mux v1.8.0
+	github.com/jinzhu/gorm v1.9.16
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
 )
