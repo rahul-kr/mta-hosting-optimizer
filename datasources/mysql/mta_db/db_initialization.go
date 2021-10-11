@@ -26,7 +26,7 @@ func init() {
 		log.Fatalf("Error loading .env file")
 	}
 	//These values derived from docker/.env file and Dockerfile ENV var
-	dataSourceName := os.Getenv("MYSQL_USER") + ":" + os.Getenv("MYSQL_PASSWORD") + "@tcp(" + os.Getenv("DB_HOST") + ":3306)/" + os.Getenv("MYSQL_USER") + "?parseTime=True"
+	dataSourceName := os.Getenv("MYSQL_USER") + ":" + os.Getenv("MYSQL_PASSWORD") + "@tcp(" + os.Getenv("DB_HOST") + ":3306)/" + os.Getenv("MYSQL_DATABASE") + "?parseTime=True"
 	Client, err = gorm.Open("mysql", dataSourceName)
 
 	if err != nil {

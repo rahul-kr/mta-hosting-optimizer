@@ -13,4 +13,7 @@ func mapUrls() {
 	// Read-all
 	router.HandleFunc("/mappings", mtahosting.GetMappings).Methods("GET")
 
+	// Create sample data
+	router.HandleFunc("/create_sample_data", mtahosting.CreateHostMapping).Methods("POST")
+
 }
