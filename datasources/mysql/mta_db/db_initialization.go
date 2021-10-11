@@ -2,8 +2,11 @@ package mta_db
 
 import (
 	"fmt"
+	"log"
+	"os"
 
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 )
 
 var Client *gorm.DB
@@ -17,7 +20,13 @@ type HostsMap struct {
 
 func init() {
 	var err error
-	dataSourceName := "root:@tcp(localhost:3306)/?parseTime=True"
+
+	envFileErr := godotenv.Load("docker/.env")
+	if envFileErr != nil {
+		log.Fatalf("Error loading .env file")
+	}
+	//These values derived from docker/.env file and Dockerfile ENV var
+	dataSourceName := os.Getenv("MYSQL_USER") + ":" + os.Getenv("MYSQL_PASSWORD") + "@tcp(" + os.Getenv("DB_HOST") + ":3306)/" + os.Getenv("MYSQL_USER") + "?parseTime=True"
 	Client, err = gorm.Open("mysql", dataSourceName)
 
 	if err != nil {
@@ -28,6 +37,5 @@ func init() {
 	// Create the database. This is a one-time step.
 	// Comment out if running multiple times - You may see an error otherwise
 	Client.Exec("CREATE DATABASE IF NOT EXISTS mta_hosting")
-	Client.Exec("USE mta_hosting")
 	Client.AutoMigrate(&HostsMap{})
 }

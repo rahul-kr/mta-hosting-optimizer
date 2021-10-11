@@ -12,22 +12,11 @@ services:
     depends_on:
       - mysql
     container_name: mta-hosting-web
+    networks:
+      - internal
     environment:
       - 'DB_PORT=3306'
       - 'DB_HOST=mysql'
-
-  # database:
-  #   image: mysql:5.7.22
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_USER: root
-  #     MYSQL_PASSWORD: root
-  #     MYSQL_DATABASE: golang-docker
-  #   container_name: golang-docker-db
-  #   ports:
-  #     - 33066:3306
-  #   volumes:
-  #     - golang-docker-data:/var/lib/mysql 
 
   mysql:
     image: mysql:5.7
@@ -41,17 +30,6 @@ services:
       - ./db-data:/var/lib/mysql
     networks:
       - internal
-
-  pma:
-    image: phpmyadmin/phpmyadmin
-    depends_on:
-      - mysql
-    ports:
-      - 5003:80
-    environment:
-      - 'PMA_HOST=mysql'
-      - 'PMA_PORT=3306'
-    container_name: mta-hosting-pma
 
 networks:
   internal:
