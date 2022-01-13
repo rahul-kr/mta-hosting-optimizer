@@ -1,0 +1,75 @@
+{
+	"names": ["kafka_api_test2"],
+	 "numPartitions": -1,
+	 "replicationFactor": -1,
+	 "replicaAssignments": [
+		 {
+			 "partition": 0,
+			 "replicas": [1,2,3]
+		 },
+		 {
+			 "partition": 1,
+			 "replicas": [3,2,1]
+		 },
+		 {
+			 "partition": 2,
+			 "replicas": [2,3,1]
+		 }
+	 ],
+	 "configEntries": [
+		{
+			"configName": "retention.ms",
+			"configValue": "3600"
+		}
+	 ]
+},
+{
+	"names": ["kafka_api_test3"],
+	 "numPartitions": -1,
+	 "replicationFactor": -1,
+	 "replicaAssignments": [
+		 {
+			 "partition": 0,
+			 "replicas": [1,2,3]
+		 },
+		 {
+			 "partition": 1,
+			 "replicas": [3,2,1]
+		 },
+		 {
+			 "partition": 2,
+			 "replicas": [2,3,1]
+		 }
+	 ],
+	 "configEntries": [
+		{
+			"configName": "retention.ms",
+			"configValue": "3600"
+		}
+	 ]
+},
+{
+	"names": ["kafka_api_test3"],
+	 "numPartitions": -1,
+	 "replicationFactor": -1,
+	 "replicaAssignments": [
+		 {
+			 "partition": 0,
+			 "replicas": [1,2,3]
+		 },
+		 {
+			 "partition": 1,
+			 "replicas": [3,2,1]
+		 },
+		 {
+			 "partition": 2,
+			 "replicas": [2,3,1]
+		 }
+	 ],
+	 "configEntries": [
+		{
+			"configName": "retention.ms",
+			"configValue": "3600"
+		}
+	 ]
+}
