@@ -2,9 +2,9 @@ name: JSON check
 
 on:
   push:
-    paths:
-      - 'app/**.json'
-  pull_request:
+    # paths:
+    #   - '*/**.json'
+  # pull_request:
 
 jobs:
   test:
