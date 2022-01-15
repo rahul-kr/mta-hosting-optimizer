@@ -59,5 +59,10 @@ jobs:
           echo "::set-output name=packageJson::$content"
       - run: |
           echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.title}}"
+      - run: |
+          curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
+
+
+# curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
 
       
