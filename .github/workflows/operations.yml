@@ -1,0 +1,63 @@
+name: "Multiple Operations"
+
+on:
+  push:
+    branches:
+      - main
+    # paths:
+    #   - 'zones/51b.**'
+
+  workflow_dispatch:
+    inputs:
+      mta_apply:
+        type: choice
+        description: 'If set to true, Create Kafka topics.'
+        required: true
+        default: 'false'
+        options:
+          - 'false'
+          - 'true'
+      mta_workspace:
+        type: choice
+        description: 'Kafka workspace to deploy.'
+        required: true
+        default: 'staging'
+        options:
+        - 'staging'
+        - 'development'
+      component_path:
+        description: Component Path (e.g. contact-delete, contact-events)
+        required: true
+      # zone:
+      #   type: choice
+      #   description: 'Env to deploy.'
+      #   required: true
+      #   default: 'zones/51b.dev'
+      #   options:
+      #     - 'staging'
+      #     - 'zones/51b.tech'
+
+env:
+  TF_WORKSPACE: "${{ github.event.inputs.mta_workspace }}"
+  # ZONE: "${{ github.event.inputs.zone }}"
+jobs:
+  kafka-api:
+    name: "Kafka Topic Creation"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - id: set_var
+        run: |
+          content=`cat ./app/random.json`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+      - run: |
+          echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.title}}"
+
+      
