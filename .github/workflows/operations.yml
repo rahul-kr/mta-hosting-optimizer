@@ -59,7 +59,7 @@ jobs:
           jsonInput="`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
           echo "::set-output name=jsonValue::$jsonInput"
       - run: echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
-      - run: echo "${{ steps.set_var.outputs.jsonValue }}""
+      - run: echo "${{ steps.set_var.outputs.jsonValue }}"
 
       - run: |
           curl -d '${{ steps.set_var.outputs.jsonValue }}' -H 'Content-Type: application/json'  https://reqres.in/api/users
