@@ -47,7 +47,7 @@ jobs:
       - run: |
           echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.title}}"
           TOPIC=${{ env.TOPIC_NAME  }}
-          echo "${{ fromJson(steps.set_var.outputs.packageJson).${TOPIC}.title }}"
+          echo "${{ fromJson(steps.set_var.outputs.packageJson).$TOPIC.title }}"
       - run: |
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
 
