@@ -53,3 +53,8 @@ jobs:
          echo $packageJson | jq '.glossary'
         env:
           json_var: ${{ steps.set_var.outputs.packageJson }}
+      - name: Access
+        run: |
+         WORKSPACE=${{ env.TOPIC_NAME  }}
+         echo "${{ env.json_var.WORKSPACE}}"
+        
