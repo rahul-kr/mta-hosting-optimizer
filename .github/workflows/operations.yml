@@ -59,8 +59,12 @@ jobs:
       #   run: |
       #     jsonInput = "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
       #     echo "$jsonInput"
-      - run: echo "AUTH_TOKEN=`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`" >> $GITHUB_ENV
-      - run: echo "${{ env.AUTH_TOKEN }}"
+      # - run: echo "AUTH_TOKEN=`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`" >> $GITHUB_ENV
+      # - run: echo "${{ env.AUTH_TOKEN }}"
+      - name: Checkout Second Step
+        env:
+          json_var: "jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}"
+        run: echo "${{env}}"
 
       # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
 
