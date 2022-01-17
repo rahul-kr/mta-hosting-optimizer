@@ -66,15 +66,15 @@ jobs:
       #     json_var: "jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}"
       #   run: echo "${{env}}"
 
-      - name: set output
-        id: set
-        run: |
-          echo ::set-output name=json_var::'[{ "name": "test", "client_payload": "111" }, { "name": "test2", "client_payload": "222" }] '
+      # - name: set output
+      #   id: set
+      #   run: |
+      #     echo ::set-output name=json_var::'[{ "name": "test", "client_payload": "111" }, { "name": "test2", "client_payload": "222" }] '
       - name: use output
         run: |
-          echo $json_var | jq '.[].name'
+          echo $packageJson | jq '.[].name'
         env:
-          json_var: ${{ steps.set.outputs.json_var}}
+          json_var: ${{ steps.set_var.outputs.packageJson}}
 
 
       # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
