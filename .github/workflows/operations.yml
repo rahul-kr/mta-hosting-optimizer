@@ -48,13 +48,13 @@ jobs:
           echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.names}}"
       - run: |
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
-    job2:
-      needs: kafka-api
-      runs-on: ubuntu-latest
-      strategy:
-        matrix: ${{fromJson(needs.kafka-api.outputs.packageJson)}}
-      steps:
-      - run: build
+  job2:
+    needs: kafka-api
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{fromJson(needs.kafka-api.outputs.packageJson)}}
+    steps:
+    - run: build
 
 
       
