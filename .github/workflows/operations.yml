@@ -54,15 +54,15 @@ jobs:
       #   run: |
       #       WORKSPACE=${{ env.TOPIC_NAME  }}
       #       echo "::set-output name=test::${{ fromJson(env.json_var).glossary1 }}"
-      - name: Update config.json
+      - id: set_val
         run: |
           jsonInput="`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
           echo "::set-output name=jsonValue::$jsonInput"
       - run: echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
-      - run: echo "${{ steps.set_var.outputs.jsonValue }}"
+      - run: echo "${{ steps.set_val.outputs.jsonValue }}"
 
       - run: |
-          curl -d '${{ steps.set_var.outputs.jsonValue }}' -H 'Content-Type: application/json'  https://reqres.in/api/users
+          curl -d '${{ steps.set_val.outputs.jsonValue }}' -H 'Content-Type: application/json'  https://reqres.in/api/users
 
 
 
