@@ -49,8 +49,7 @@ jobs:
       - run: |
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
       - name: Checkout
+        run: |
+         echo $packageJson | jq '.glossary'
         env:
           json_var: ${{ steps.set_var.outputs.packageJson }}
-      - run: |
-            TOPIC=${{ env.TOPIC_NAME  }}
-            echo "TF_WORKSPACE=${env.json_var.$TOPIC}" >> $GITHUB_ENV
