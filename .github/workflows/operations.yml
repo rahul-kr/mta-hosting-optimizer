@@ -59,20 +59,10 @@ jobs:
       #   run: |
       #     jsonInput = "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
       #     echo "$jsonInput"
-      # - run: echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
-      # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
+      - run: echo ""AUTH_TOKEN= $(jq '.env.TOPIC_NAME' env.TOPIC_PATH)"" >> $GITHUB_ENV
+      - run: echo "${{ env.AUTH_TOKEN }}"
 
-      - name: Extract version from package.json
-        uses: sergeysova/jq-action@v2
-        id: version
-        with:
-          cmd: 'jq .${{env.TOPIC_NAME}} ${{ env.TOPIC_PATH}} -r'
-      - name: Show keywords
-        run: |
-          keywords="${{ steps.version.outputs.value }}"
-          for keyword in $keywords; do
-            echo "$keyword"
-          done
+      # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
 
       # - run: |
       #     curl -d '${{ steps.set_val.outputs.jsonValue }}' -H 'Content-Type: application/json'  https://reqres.in/api/users
