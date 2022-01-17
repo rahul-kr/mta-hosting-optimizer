@@ -74,8 +74,7 @@ jobs:
         id: output2
         run: |
           topic=${{ env.TOPIC_NAME }}
-          n1=${{ packageJson.topic }}
-          echo ::set-output name=json_var::$n1
+          echo ::set-output name=json_var::${{fromJson(steps.set_var.outputs.packageJson).topic}}
       - name: use output2
         run: |
           echo $json_var
