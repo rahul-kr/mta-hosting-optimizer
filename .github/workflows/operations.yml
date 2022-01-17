@@ -45,7 +45,6 @@ jobs:
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
       - run: |
-          TOPIC_NAME = ${{ env.TOPIC_NAME  }}
           matrix: "${{fromJson(steps.set_var.outputs.packageJson)}}"
           echo "${{ matrix.glossary.title }}"
       - run: |
