@@ -47,7 +47,7 @@ jobs:
       - run: |
           echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.names}}"
       - run: |
-          curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
+          curl -d '`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`' -H 'Content-Type: application/json'  https://reqres.in/api/users
       - name: Checkout Second Step
         env:
           json_var: ${{ steps.set_var.outputs.packageJson }}
@@ -57,10 +57,8 @@ jobs:
       - name: Update config.json
         run: echo "::set-output name=myJson::`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
       - name: read config.json
-        env:
-          myjson_var: ${{ steps.set_var.outputs.myJson }}
         run: |
-            echo "${{env.myjson_var}}"
+            echo "${{ steps.set_var.outputs.myJson }}"
 
 
 
