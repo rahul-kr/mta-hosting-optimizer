@@ -45,8 +45,8 @@ jobs:
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
       - run: |
-          matrix: "${{fromJson(steps.set_var.outputs.packageJson)}}"
-          echo "${{ matrix.glossary.title }}"
+          echo "${{ content }}"
+          echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.title}}"
       - run: |
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
 
