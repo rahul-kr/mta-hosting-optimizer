@@ -45,9 +45,16 @@ jobs:
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
       - run: |
-          echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.title}}"
+          echo "${{fromJson(steps.set_var.outputs.packageJson).0.glossary.title}}"
       - run: |
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
+    job2:
+      needs: kafka-api
+      runs-on: ubuntu-latest
+      strategy:
+        matrix: ${{fromJson(needs.kafka-api.outputs.packageJson)}}
+      steps:
+      - run: build
 
 
       
