@@ -59,5 +59,8 @@ jobs:
       - name: read config.json
         env:
           myjson_var: ${{ steps.set_var.outputs.myJson }}
+        run: |
+            echo "${{env.myjson_var}}"
+
 
 
