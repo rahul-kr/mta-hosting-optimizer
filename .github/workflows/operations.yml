@@ -67,8 +67,12 @@ jobs:
         id: version
         with:
           cmd: 'jq .${{env.TOPIC_NAME}} ${{ env.TOPIC_PATH}} -r'
-      - name: Show my version
-        run: 'echo "version ${{ steps.version.outputs.value }}"'
+      - name: Show keywords
+        run: |
+          keywords="${{ steps.version.outputs.value }}"
+          for keyword in $keywords; do
+            echo "$keyword"
+          done
 
       # - run: |
       #     curl -d '${{ steps.set_val.outputs.jsonValue }}' -H 'Content-Type: application/json'  https://reqres.in/api/users
