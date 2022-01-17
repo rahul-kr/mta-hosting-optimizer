@@ -50,10 +50,9 @@ jobs:
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
       - name: Checkout
         run: |
-         WORKSPACE=${{ env.TOPIC_NAME  }}
          echo $packageJson | jq '.glossary'
         env:
-          json_var: ${{ steps.set_var.outputs.packageJson.$WORKSPACE }}
+          json_var: ${{ steps.set_var.outputs.packageJson }}
           run: |
             WORKSPACE=${{ env.TOPIC_NAME  }}
             echo "${{ env.json_var.$WORKSPACE}}"
