@@ -55,16 +55,16 @@ jobs:
       #   run: |
       #       WORKSPACE=${{ env.TOPIC_NAME  }}
       #       echo "::set-output name=test::${{ fromJson(env.json_var).glossary1 }}"
-      - id: set_val
-        run: |
-          jsonInput = "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
-          echo "$jsonInput"
+      # - id: set_val
+      #   run: |
+      #     jsonInput = "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
+      #     echo "$jsonInput"
       # - run: echo "AUTH_TOKEN=`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`" >> $GITHUB_ENV
       # - run: echo "${{ env.AUTH_TOKEN }}"
-      - name: Checkout Second Step
-        env:
-          json_var: "jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}"
-        run: echo "${{env}}"
+      # - name: Checkout Second Step
+      #   env:
+      #     json_var: "jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}"
+      #   run: echo "${{env}}"
 
       - name: set output
         id: set
