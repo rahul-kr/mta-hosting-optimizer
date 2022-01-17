@@ -79,7 +79,7 @@ jobs:
           # 
       - name: use output2
         run: |
-          echo ${{ json_var }}
+          echo $json_var
         env:
           json_var1: ${{ steps.output2.outputs.json_var }}
       - name: use output3
