@@ -4,20 +4,11 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'zones/51b.**'
-
+      - dev
+  pull_request:
   workflow_dispatch:
     inputs:
-      # mta_apply:
-      #   type: choice
-      #   description: 'If set to true, Create Kafka topics.'
-      #   required: true
-      #   default: 'false'
-      #   options:
-      #     - 'false'
-      #     - 'true'
-      mta_workspace:
+      kafka_env:
         type: choice
         description: 'Kafka environment to create the topic.'
         required: true
@@ -26,23 +17,16 @@ on:
         - 'staging'
         - 'development'
       topic_name:
-        description: Topic Name (It must be in a valid JSON format.)
+        description: Topic Name (It must be specified in valid JSON format.)
         required: true
       file_path:
-        description: File name with path of the json.
+        description: File name with path.
         required: true
-      # zone:
-      #   type: choice
-      #   description: 'Env to deploy.'
-      #   required: true
-      #   default: 'zones/51b.dev'
-      #   options:
-      #     - 'staging'
-      #     - 'zones/51b.tech'
 
 env:
-  TF_WORKSPACE: "${{ github.event.inputs.mta_workspace }}"
-  # ZONE: "${{ github.event.inputs.zone }}"
+  KAFKA_ENV: "${{ github.event.inputs.kafka_env }}"
+  TOPIC_NAME: "${{ github.event.inputs.kafka_env }}"
+
 jobs:
   kafka-api:
     name: "Kafka Topic Creation"
@@ -61,12 +45,9 @@ jobs:
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
       - run: |
-          echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.title}}"
+          echo "${{fromJson(steps.set_var.outputs.packageJson).github.event.inputs.kafka_env.names}}"
       - run: |
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
 
-
-# curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
-# curl -d '{"organization_id": 12345}' -H 'Content-Type: application/json'  https://db-management-st-gke.51b.dev/databases/emailing
 
       
