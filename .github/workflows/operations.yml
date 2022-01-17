@@ -55,7 +55,7 @@ jobs:
             WORKSPACE=${{ env.TOPIC_NAME  }}
             echo "::set-output name=test::${{ fromJson(env.json_var).glossary1 }}"
       - name: Update config.json
-        run: echo "`::set-output name=myJson::jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
+        run: echo "::set-output name=myJson::`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
       - name: read config.json
         env:
           myjson_var: ${{ steps.set_var.outputs.myJson }}
