@@ -56,9 +56,9 @@ jobs:
       #       echo "::set-output name=test::${{ fromJson(env.json_var).glossary1 }}"
       - id: set_val
         run: |
-          jsonInput="`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
-          echo "${{ jsonInput }}"
-      - run: echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
+          jsonInput = "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
+          echo "$jsonInput"
+      # - run: echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
       # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
 
       - run: |
