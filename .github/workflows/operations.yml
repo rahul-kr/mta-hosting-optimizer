@@ -1,11 +1,11 @@
 name: "Multiple Operations"
 
 on:
-  push:
-    branches:
-      - main
-      - dev
-  pull_request:
+  # push:
+  #   branches:
+  #     - main
+  #     - dev
+  # pull_request:
   workflow_dispatch:
     inputs:
       kafka_env:
@@ -15,7 +15,7 @@ on:
         default: 'staging'
         options:
         - 'staging'
-        - 'development'
+        - 'production'
       topic_name:
         description: Topic Name (It must be specified in valid JSON format.)
         required: true
@@ -25,7 +25,7 @@ on:
 
 env:
   KAFKA_ENV: "${{ github.event.inputs.kafka_env }}"
-  TOPIC_NAME: "${{ github.event.inputs.kafka_env }}"
+  TOPIC_NAME: "${{ github.event.inputs.topic_name }}"
 
 jobs:
   kafka-api:
@@ -37,7 +37,7 @@ jobs:
 
       - id: set_var
         run: |
-          content=`cat ./app/random.json`
+          content=`cat ./${{ github.event.inputs.file_path }}`
           # the following lines are only required for multi line json
           content="${content//'%'/'%25'}"
           content="${content//$'\n'/'%0A'}"
@@ -45,7 +45,10 @@ jobs:
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
       - run: |
-          echo "${{fromJson(steps.set_var.outputs.packageJson).github.event.inputs.kafka_env.names}}"
+          TOPIC_NAME = ${{ env.TOPIC_NAME  }}
+          matrix: "${{fromJson(steps.set_var.outputs.packageJson)}}"
+          # echo "${{ matrix.TOPIC_NAME }}"
+          echo "${{ matrix.glossary.title }}"
       - run: |
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
 
