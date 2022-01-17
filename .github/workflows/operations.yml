@@ -45,7 +45,7 @@ jobs:
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
       - run: |
-          echo "${{fromJson(steps.set_var.outputs.packageJson).(github.event.inputs.topic_name) }}"
+          echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.names}}"
       - run: |
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
       - name: Checkout
@@ -53,5 +53,5 @@ jobs:
           json_var: ${{ steps.set_var.outputs.packageJson }}
         run: |
             WORKSPACE=${{ env.TOPIC_NAME  }}
-            echo "${{ env.json_var }}"
+            echo "${{ env.json_var.WORKSPACE }}"
 
