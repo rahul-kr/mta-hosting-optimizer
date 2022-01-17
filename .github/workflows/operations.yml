@@ -9,24 +9,27 @@ on:
 
   workflow_dispatch:
     inputs:
-      mta_apply:
-        type: choice
-        description: 'If set to true, Create Kafka topics.'
-        required: true
-        default: 'false'
-        options:
-          - 'false'
-          - 'true'
+      # mta_apply:
+      #   type: choice
+      #   description: 'If set to true, Create Kafka topics.'
+      #   required: true
+      #   default: 'false'
+      #   options:
+      #     - 'false'
+      #     - 'true'
       mta_workspace:
         type: choice
-        description: 'Kafka workspace to deploy.'
+        description: 'Kafka environment to create the topic.'
         required: true
         default: 'staging'
         options:
         - 'staging'
         - 'development'
-      component_path:
-        description: Component Path (e.g. contact-delete, contact-events)
+      topic_name:
+        description: Topic Name (It must be in a valid JSON format.)
+        required: true
+      file_path:
+        description: File name with path of the json.
         required: true
       # zone:
       #   type: choice
@@ -64,5 +67,6 @@ jobs:
 
 
 # curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
+# curl -d '{"organization_id": 12345}' -H 'Content-Type: application/json'  https://db-management-st-gke.51b.dev/databases/emailing
 
       
