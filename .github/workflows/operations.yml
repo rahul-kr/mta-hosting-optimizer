@@ -47,7 +47,6 @@ jobs:
       - run: |
           TOPIC_NAME = ${{ env.TOPIC_NAME  }}
           matrix: "${{fromJson(steps.set_var.outputs.packageJson)}}"
-          # echo "${{ matrix.TOPIC_NAME }}"
           echo "${{ matrix.glossary.title }}"
       - run: |
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
