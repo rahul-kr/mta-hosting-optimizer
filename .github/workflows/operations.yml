@@ -72,9 +72,18 @@ jobs:
       #     echo ::set-output name=json_var::'[{ "name": "test", "client_payload": "111" }, { "name": "test2", "client_payload": "222" }] '
       - name: use output
         run: |
-          echo $packageJson | jq '.${{ env.TOPIC_NAME }} $packageJson'
+          topic=env.TOPIC_NAME
+          n1=$packageJson.topic
+          echo ::set-output name=json_var::$n1
+          # 
+      - name: use output2
+        run: |
+          echo $n1
+      - name: use output3
+        run: |
+          echo $packageJson | jq '.${{ env.TOPIC_NAME }} '
         env:
-          json_var: ${{ steps.set_var.outputs.packageJson}}
+          json_var: ${{ fromJson(steps.set_var.outputs.packageJson)}}
 
 
       # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
