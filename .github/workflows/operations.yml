@@ -51,12 +51,6 @@ jobs:
       - name: Checkout
         env:
           json_var: ${{ steps.set_var.outputs.packageJson }}
-          run: |
+      - run: |
             TOPIC=${{ env.TOPIC_NAME  }}
             echo "TF_WORKSPACE=${env.json_var.$TOPIC}" >> $GITHUB_ENV
-          
-
-
-
-
-      
