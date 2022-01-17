@@ -26,6 +26,7 @@ on:
 env:
   KAFKA_ENV: "${{ github.event.inputs.kafka_env }}"
   TOPIC_NAME: "${{ github.event.inputs.topic_name }}"
+  TOPIC_PATH: "${{ github.event.inputs.file_path }}"
 
 jobs:
   kafka-api:
@@ -65,12 +66,12 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: version
         with:
-          cmd: "jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }} -r"
+          cmd: 'jq .${{env.TOPIC_NAME}} ${{ env.TOPIC_PATH}} -r'
       - name: Show my version
         run: 'echo "version ${{ steps.version.outputs.value }}"'
-        
-      - run: |
-          curl -d '${{ steps.set_val.outputs.jsonValue }}' -H 'Content-Type: application/json'  https://reqres.in/api/users
+
+      # - run: |
+      #     curl -d '${{ steps.set_val.outputs.jsonValue }}' -H 'Content-Type: application/json'  https://reqres.in/api/users
 
 
 
