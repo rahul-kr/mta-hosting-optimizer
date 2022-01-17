@@ -50,12 +50,15 @@ jobs:
           curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
       - name: Checkout Second Step
         env:
-          json_var: ${{ steps.set_var.outputs.packageJson | jq '.${{ github.event.inputs.topic_name }}' }}
+          json_var: ${{ steps.set_var.outputs.packageJson }}
         run: |
             WORKSPACE=${{ env.TOPIC_NAME  }}
             echo "::set-output name=test::${{ fromJson(env.json_var).glossary1 }}"
       - name: Update config.json
-        run: echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
+        run: |
+          token="`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
+          echo "::set-output name=auth_token::$token"
+      - run: echo ${{ steps.set_var.outputs.auth_token }}
 
 
 
