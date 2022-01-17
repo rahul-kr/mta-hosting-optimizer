@@ -72,7 +72,7 @@ jobs:
       #     echo ::set-output name=json_var::'[{ "name": "test", "client_payload": "111" }, { "name": "test2", "client_payload": "222" }] '
       - name: use output
         run: |
-          echo $packageJson | jq '.${{ env.TOPIC_NAME }}'
+          echo $packageJson | jq '.[].${{ env.TOPIC_NAME }} '
         env:
           json_var: ${{ steps.set_var.outputs.packageJson}}
 
