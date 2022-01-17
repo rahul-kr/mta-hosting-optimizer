@@ -59,7 +59,7 @@ jobs:
       #   run: |
       #     jsonInput = "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
       #     echo "$jsonInput"
-      - run: echo ""AUTH_TOKEN= $(jq '.env.TOPIC_NAME' env.TOPIC_PATH)"" >> $GITHUB_ENV
+      - run: echo "AUTH_TOKEN=`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`" >> $GITHUB_ENV
       - run: echo "${{ env.AUTH_TOKEN }}"
 
       # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
