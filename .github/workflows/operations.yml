@@ -44,10 +44,10 @@ jobs:
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
-      - run: |
-          echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.names}}"
-      - run: |
-          curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
+      # - run: |
+      #     echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.names}}"
+      # - run: |
+      #     curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
       # - name: Checkout Second Step
       #   env:
       #     json_var: ${{ steps.set_var.outputs.packageJson }}
@@ -57,9 +57,9 @@ jobs:
       - id: set_val
         run: |
           jsonInput="`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
-          echo "::set-output name=jsonValue::$jsonInput"
+          echo "${{ jsonInput }}"
       - run: echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
-      - run: echo "${{ steps.set_val.outputs.jsonValue }}"
+      # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
 
       - run: |
           curl -d '${{ steps.set_val.outputs.jsonValue }}' -H 'Content-Type: application/json'  https://reqres.in/api/users
