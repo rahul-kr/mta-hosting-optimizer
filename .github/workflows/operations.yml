@@ -82,7 +82,7 @@ jobs:
           json_var1: ${{ steps.output2.outputs.json_var }}
       - name: read config.json
         run: cat config.json
-        
+
       - name: use output3
         run: |
           echo $packageJson | jq '.${{ env.TOPIC_NAME }} '
@@ -92,8 +92,8 @@ jobs:
 
       # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
 
-      # - run: |
-      #     curl -d '${{ steps.set_val.outputs.jsonValue }}' -H 'Content-Type: application/json'  https://reqres.in/api/users
+      - run: |
+          curl -d config.json -H 'Content-Type: application/json'  https://reqres.in/api/users
 
 
 
