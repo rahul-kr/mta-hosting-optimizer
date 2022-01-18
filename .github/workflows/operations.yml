@@ -57,5 +57,5 @@ jobs:
             echo "::set-output name=Check::curl -s -o /dev/null -w "%{http_code}" -d @config.json -H 'Content-Type: application/json'  $URL"
           fi
           echo "Check logs"
-      - run: |
-           echo $Check
+      - env:
+          json_var: ${{ steps.set_var.outputs.Check }}
