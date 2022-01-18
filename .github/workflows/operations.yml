@@ -60,3 +60,5 @@ jobs:
       - name: Checkout Second Step
         env:
           json_var: ${{ steps.set_var.outputs.Check }}
+        run: |
+           echo ${{ env.json_var }}
