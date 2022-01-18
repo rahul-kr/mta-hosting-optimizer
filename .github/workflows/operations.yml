@@ -54,7 +54,8 @@ jobs:
             if [[ $ENV == "staging" ]]; then
                 URL="https://reqres.in/api/users"
             fi
-            Check = curl -s -o /dev/null -w "%{http_code}" -d @config.json -H 'Content-Type: application/json'  $URL
-            echo $Check
+            echo "::set-output name=Check::curl -s -o /dev/null -w "%{http_code}" -d @config.json -H 'Content-Type: application/json'  $URL
           fi
           echo "Check logs"
+      - run: |
+           echo $Check
