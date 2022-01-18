@@ -93,7 +93,7 @@ jobs:
       # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
 
       - run: |
-          curl --data config.json -H 'Content-Type: application/json'  https://reqres.in/api/users
+          curl -d @config.json -H 'Content-Type: application/json'  https://reqres.in/api/users
 
 
 
