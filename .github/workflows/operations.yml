@@ -77,7 +77,7 @@ jobs:
           echo ::set-output name=json_var::${{fromJson(steps.set_var.outputs.packageJson).topic}}
       - name: use output2
         run: |
-           STARR="`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
+           echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
         env:
           json_var1: ${{ steps.output2.outputs.json_var }}
       - name: use output3
