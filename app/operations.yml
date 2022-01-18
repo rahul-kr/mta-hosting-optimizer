@@ -1,0 +1,99 @@
+name: "Multiple Operations"
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  #     - dev
+  # pull_request:
+  workflow_dispatch:
+    inputs:
+      kafka_env:
+        type: choice
+        description: 'Kafka environment to create the topic.'
+        required: true
+        default: 'staging'
+        options:
+        - 'staging'
+        - 'production'
+      topic_name:
+        description: Topic Name (It must be specified in valid JSON format.)
+        required: true
+      file_path:
+        description: File name with path.
+        required: true
+
+env:
+  KAFKA_ENV: "${{ github.event.inputs.kafka_env }}"
+  TOPIC_NAME: "${{ github.event.inputs.topic_name }}"
+  TOPIC_PATH: "${{ github.event.inputs.file_path }}"
+
+jobs:
+  kafka-api:
+    name: "Kafka Topic Creation"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - id: set_var
+        run: |
+          content=`cat ./${{ github.event.inputs.file_path }}`
+          # the following lines are only required for multi line json
+          content="${content//'%'/'%25'}"
+          content="${content//$'\n'/'%0A'}"
+          content="${content//$'\r'/'%0D'}"
+          # end of optional handling for multi line json
+          echo "::set-output name=packageJson::$content"
+      # - run: |
+      #     echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.names}}"
+      # - run: |
+      #     curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
+      # - name: Checkout Second Step
+      #   env:
+      #     json_var: ${{ steps.set_var.outputs.packageJson }}
+      #   run: |
+      #       WORKSPACE=${{ env.TOPIC_NAME  }}
+      #       echo "::set-output name=test::${{ fromJson(env.json_var).glossary1 }}"
+      # - id: set_val
+      #   run: |
+      #     jsonInput = "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
+      #     echo "$jsonInput"
+      # - run: echo "AUTH_TOKEN=`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`" >> $GITHUB_ENV
+      # - run: echo "${{ env.AUTH_TOKEN }}"
+      # - name: Checkout Second Step
+      #   env:
+      #     json_var: "jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}"
+      #   run: echo "${{env}}"
+
+      # - name: set output
+      #   id: set
+      #   run: |
+      #     echo ::set-output name=json_var::'[{ "name": "test", "client_payload": "111" }, { "name": "test2", "client_payload": "222" }] '
+      - name: use output
+        id: output2
+        run: |
+          topic=${{ env.TOPIC_NAME }}
+          echo ::set-output name=json_var::${{fromJson(steps.set_var.outputs.packageJson).topic}}
+      - name: use output2
+        run: |
+           echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`" > config.json
+        env:
+          json_var1: ${{ steps.output2.outputs.json_var }}
+      - name: read config.json
+        run: cat config.json
+
+      - name: use output3
+        run: |
+          echo $packageJson | jq '.${{ env.TOPIC_NAME }} '
+        env:
+          json_var2: ${{ steps.set_var.outputs.packageJson }}
+
+
+      # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
+
+      - run: |
+          curl -d @config.json -H 'Content-Type: application/json'  https://reqres.in/api/users
+
+
+

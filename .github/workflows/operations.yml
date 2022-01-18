@@ -1,11 +1,6 @@
 name: "Multiple Operations"
 
 on:
-  # push:
-  #   branches:
-  #     - main
-  #     - dev
-  # pull_request:
   workflow_dispatch:
     inputs:
       kafka_env:
@@ -45,55 +40,18 @@ jobs:
           content="${content//$'\r'/'%0D'}"
           # end of optional handling for multi line json
           echo "::set-output name=packageJson::$content"
-      # - run: |
-      #     echo "${{fromJson(steps.set_var.outputs.packageJson).glossary.names}}"
-      # - run: |
-      #     curl -d '{"name": "morpheus","job": "leader"}' -H 'Content-Type: application/json'  https://reqres.in/api/users
-      # - name: Checkout Second Step
-      #   env:
-      #     json_var: ${{ steps.set_var.outputs.packageJson }}
-      #   run: |
-      #       WORKSPACE=${{ env.TOPIC_NAME  }}
-      #       echo "::set-output name=test::${{ fromJson(env.json_var).glossary1 }}"
-      # - id: set_val
-      #   run: |
-      #     jsonInput = "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`"
-      #     echo "$jsonInput"
-      # - run: echo "AUTH_TOKEN=`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`" >> $GITHUB_ENV
-      # - run: echo "${{ env.AUTH_TOKEN }}"
-      # - name: Checkout Second Step
-      #   env:
-      #     json_var: "jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}"
-      #   run: echo "${{env}}"
-
-      # - name: set output
-      #   id: set
-      #   run: |
-      #     echo ::set-output name=json_var::'[{ "name": "test", "client_payload": "111" }, { "name": "test2", "client_payload": "222" }] '
-      - name: use output
-        id: output2
+      - name: use inputs and filter topic
         run: |
-          topic=${{ env.TOPIC_NAME }}
-          echo ::set-output name=json_var::${{fromJson(steps.set_var.outputs.packageJson).topic}}
-      - name: use output2
-        run: |
-           echo "`jq '.${{ github.event.inputs.topic_name }}' ./${{ github.event.inputs.file_path }}`" > config.json
-        env:
-          json_var1: ${{ steps.output2.outputs.json_var }}
-      - name: read config.json
-        run: cat config.json
-
-      - name: use output3
-        run: |
-          echo $packageJson | jq '.${{ env.TOPIC_NAME }} '
-        env:
-          json_var2: ${{ steps.set_var.outputs.packageJson }}
-
-
-      # - run: echo "${{ steps.set_val.outputs.jsonValue }}"
-
+           echo "`jq '.${{ env.TOPIC_NAME }}' ./${{ env.TOPIC_PATH }}`" > config.json
       - run: |
-          curl -d @config.json -H 'Content-Type: application/json'  https://reqres.in/api/users
-
-
-
+          if [[ -f "config.json" && -s "config.json" ]]; then 
+            ENV=${{ env.KAFKA_ENV  }}
+            if [[ $ENV == "production" ]]; then
+                URL="https://kafka-api.51b.tech"
+            fi
+            if [[ $ENV == "staging" ]]; then
+                URL="https://reqres.in/api/users"
+            fi
+            curl -d @config.json -H 'Content-Type: application/json'  $URL
+          fi
+          echo "Check logs"
