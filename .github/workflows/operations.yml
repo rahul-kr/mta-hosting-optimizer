@@ -12,18 +12,31 @@ on:
         - 'staging'
         - 'production'
       topic_name:
-        description: Topic Name (It must be specified in valid JSON format.)
+        description: Topic Index (It must be specified in valid JSON format.)
         required: true
-        default: 'glossary'
-      file_path:
-        description: File name with path.
+      project_path:
+        type: choice
+        description: Project Name.
         required: true
-        default: 'app/random.json'
+        default: ''
+        options:
+        - 'contact-events'
+        - 'contact-delete'
+        - 'email-marketing'
+        - 'email-transactional'
+        - 'global-webhooks'
+        - 'inbound-email-events'
+        - 'log-automation-workflow-events'
+        - 'marketing-automation'
+        - 'order'
+        - 'session'
+        - 'user-event-map-events'
+
 
 env:
   KAFKA_ENV: "${{ github.event.inputs.kafka_env }}"
   TOPIC_NAME: "${{ github.event.inputs.topic_name }}"
-  TOPIC_PATH: "${{ github.event.inputs.file_path }}"
+  PROJECT_NAME: "${{ github.event.inputs.project_path }}"
 
 jobs:
   kafka-api:
@@ -33,9 +46,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: 'Setting File Path'
+        run: |
+          ENV=${{ env.KAFKA_ENV  }}
+          if [[ $ENV == "production" ]]; then
+              FILEPATH="${{ env.PROJECT_NAME }}/kafka-topics-production.json"
+          fi
+          if [[ $ENV == "staging" ]]; then
+              FILEPATH="${{ env.PROJECT_NAME }}/kafka-topics-staging.json"
+          fi
+          echo "FILEPATH=${FILEPATH}" >> $GITHUB_ENV
+
       - id: set_var
         run: |
-          content=`cat ./${{ github.event.inputs.file_path }}`
+          content=`cat ./${{ env.FILEPATH }}`
           # the following lines are only required for multi line json
           content="${content//'%'/'%25'}"
           content="${content//$'\n'/'%0A'}"
@@ -44,21 +68,39 @@ jobs:
           echo "::set-output name=packageJson::$content"
       - name: use inputs and filter topic
         run: |
-           echo "`jq '.${{ env.TOPIC_NAME }}' ./${{ env.TOPIC_PATH }}`" > config.json
-      - run: |
-          if [[ -f "config.json" && -s "config.json" ]]; then 
+          echo "`jq '.${{ env.TOPIC_NAME }}' ./${{ env.FILEPATH }}`" > inputConfig.json
+
+      - name: Check inputConfig file
+        run: |
+          content1=`cat inputConfig.json`
+          if [[ $content1 == "null" ]] ; then
+            echo "${req}"
+            exit 1
+          fi
+          echo "${content1}"
+           
+      - name: Curl Hit
+        env:
+          SUPER_SECRET_ID: ${{ secrets.ACCESS_CLIENT_ID }}
+          SUPER_SECRET: ${{ secrets.ACCESS_CLIENT_SECRET }}
+        run: |
+          if [[ -f "inputConfig.json" && -s "inputConfig.json" ]]; then 
             ENV=${{ env.KAFKA_ENV  }}
             if [[ $ENV == "production" ]]; then
-                URL="https://kafka-api.51b.tech"
+                URL="https://kafka-api.51b.tech/createTopics"
             fi
             if [[ $ENV == "staging" ]]; then
-                URL="https://reqres.in/api/users"
+                URL="https://kafka-api-st.51b.tech/createTopics"
             fi
-            echo "::set-output name=Check::curl -s -o /dev/null -w "%{http_code}" -d @config.json -H 'Content-Type: application/json'  $URL"
+            req=$(curl -s -o /dev/null -w "%{http_code}" -d @inputConfig.json \
+              -H "CF-Access-Client-Id: $SUPER_SECRET_ID" \
+              -H "CF-Access-Client-Secret: $SUPER_SECRET" \
+              $URL) 2>&1
+            if [[ $req != 200 ]] ; then
+              echo "${req}"
+              exit 1
+            fi
+            echo "${req}"
           fi
           echo "Check logs"
-      - name: Checkout Second Step
-        env:
-          json_var: ${{ steps.set_var.outputs.Check }}
-        run: |
-           echo ${{ env.json_var }}
+      
